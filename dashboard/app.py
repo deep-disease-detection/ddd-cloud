@@ -2,12 +2,12 @@ import streamlit as st
 from google.cloud import storage
 import time
 import datetime
-import io
+
 
 # Set up GCP storage client
 client = storage.Client()
 bucket_name = "images_classification_virus"
-bucket = client.get_bucket(bucket_name)
+
 
 # Define function to read metadata of image file
 def get_metadata(blob):
@@ -35,21 +35,20 @@ def display_image_and_metadata(blob):
 # Main loop
 while True:
     # add title to the app
-    st.title("Image Viewer")
-
+    st.title("Virus Viewer")
+    bucket = client.get_bucket(bucket_name)
     # Get list of blobs in bucket
     blobs = list(bucket.list_blobs())
 
-    # Filter list to only include image files
-    image_blobs = [blob for blob in blobs]
-    print(image_blobs[0])
-    # get the recent image in the bucket
+    # get the most recent image uploaded by date and time
+    most_recent_image_upload = max(blobs, key=lambda x: x.time_created)
+
 
     # Check if there are any image files in the bucket
-    if image_blobs:
+    if blobs:
         # Display the first image file and its metadata
         # display only one image
-        display_image_and_metadata(image_blobs[0])
+        display_image_and_metadata(most_recent_image_upload)
         print("Image found in bucket")
     else:
         st.write("No image files found in bucket.")
