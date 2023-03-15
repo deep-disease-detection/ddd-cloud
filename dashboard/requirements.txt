@@ -1,15 +1,8 @@
 streamlit
 google-cloud-storage
-time
-datetime
 pyautogui
-json
-streamlit_autorefresh-st_autorefresh
-datetime
-io
-PIL-Image
+Pillow
+streamlit-autorefresh
 numpy
 matplotlib
 pandas
-base64
-requests
