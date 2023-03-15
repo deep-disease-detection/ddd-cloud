@@ -12,6 +12,7 @@ COPY Home.py Home.py
 COPY pages pages
 COPY logo.png logo.png
 COPY description.json description.json
+
 # Expose the port
 EXPOSE 8501
 
