@@ -17,52 +17,67 @@ bucket = client.get_bucket(bucket_name)
 
 def get_metadata(blob):
     metadata = {}
-    metadata['name'] = blob.name
-    metadata['metadata'] = blob.metadata
+    metadata["name"] = blob.name
+    metadata["metadata"] = blob.metadata
 
-    return metadata
+    time_image_epoch = metadata["metadata"]["time"]
+    date_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime(
+        "%Y-%m-%d"
+    )
+    time_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime(
+        "%H:%M:%S"
+    )
+
+    return {
+        "class": metadata["metadata"]["class"],
+        "date": date_image,
+        "time": time_image,
+    }
 
 
 # Define function to display image and metadata
-def display_image_and_metadata(blob):
-    metadata = get_metadata(blob)
-    st.image(blob.download_as_bytes(), caption=blob.name, use_column_width=True)
-    # get time epoch and convert to date
-    time_image_epoch = metadata['metadata']['time']
-    date_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime('%Y-%m-%d')
-    time_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime('%H:%M:%S')
-    # convert the date to string
-    get_class = metadata['metadata']['class']
-    st.metric(label="Class", value=get_class)
-    get_proba = metadata['metadata']['proba']
-    st.metric(label="Accuracy", value=get_proba)
-    st.metric(label="Date", value=date_image)
-    st.metric(label="Time", value=time_image)
+def get_image(blob):
+    return blob.download_as_bytes()
 
-
-
-# Get the class name
-def get_class(blob):
-    metadata = get_metadata(blob)
-    return metadata['metadata']['class']
 
 ##Get the description of viruses from json file
-with open('description.json') as json_file:
-    data = json.load(json_file)
+with open("description.json") as json_file:
+    wikipedia_data = json.load(json_file)
 
+### CUSTOM CSS
+CSS = """
+  .stApp {
+    background-color: #111119;
+  }
+  h1, h2 {
+    color: springgreen;
+  }
+  [data-testid="stMetricValue"] {
+    font-size: 1.75rem;
+  }
+"""
+# Set pages' names
+pages = st.source_util.get_pages('Home.py')
+new_page_names = {
+  'page_2': '🦠 Demo',
+  'page_3': '📈 Analytics',
+}
+for key, page in pages.items():
+  if page['page_name'] in new_page_names:
+    page['page_name'] = new_page_names[page['page_name']]
+
+
+st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
 # Logo pour faire styler
-logo = Image.open('../dashboard/logo.png')
+logo = Image.open("../dashboard/logo.png")
 with st.sidebar:
-
-    #st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
-    #st.write("**About Us** [👉](https://github.com/deep-disease-detection)")
-    link ='[**About Us**](https://github.com/deep-disease-detection)'
+    # st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
+    # st.write("**About Us** [👉](https://github.com/deep-disease-detection)")
+    link = "[**About Us**](https://github.com/deep-disease-detection)"
     st.markdown(link, unsafe_allow_html=True)
 
-    st.image(logo, use_column_width=True)
-
-
+    # st.image(logo, use_column_width=True)
 
 
 st.title("Deep Disease Detector")
@@ -73,29 +88,26 @@ blobs = list(bucket.list_blobs())
 # get the most recent image uploaded by date and time
 most_recent_image_upload = max(blobs, key=lambda x: x.time_created)
 
-## Create three columns
-#col1, col2, col3 = st.columns(3)
+## Create two columns
+col1, col2 = st.columns([4, 1])
 
-## Description of virus
-# with col1:
-st.header("Classification")
-st.write(f'**{get_class(most_recent_image_upload)}** {data[get_class(most_recent_image_upload)]}')
+## VIRUS INFORMATION
+metadata = get_metadata(most_recent_image_upload)
+with col1:
+    st.header("Microscope Feed")
+    img = get_image(most_recent_image_upload)
+    st.image(img, width=300, output_format="PNG")
 
-## Picture of virus, Date/Time/Class/Accuracy
-# with col2:
-st.header("Virus")
-display_image_and_metadata(most_recent_image_upload)
 
-## Tendencies of the day with barchart, average accuracy and most detected virus
-# with col3:
-st.header("Tendencies of the day")
-chart_data = pd.DataFrame(
-np.random.randn(20, 3),
-columns=["a", "b", "c"])
+with col2:
+    st.header("Classification")
+    st.metric("Virus type", metadata["class"])
+    st.metric("Date", metadata["date"])
+    st.metric("Time", metadata["time"])
 
-st.bar_chart(chart_data)
-st.write(f"**Average Probability**: {mean([0.90, 0.95])}")
-st.write(f'**Most detected virus**: {max(set(["Ebola", "Ebola", "CCHP"]))}')
+
+st.header("Virus information")
+st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 
 
 ## Refresh the page every 5 seconds
@@ -103,8 +115,14 @@ st.write(f'**Most detected virus**: {max(set(["Ebola", "Ebola", "CCHP"]))}')
 # count = st_autorefresh(interval=50000, limit=100, key="ddd")
 
 
-
-# ### Reset button
+## Reset button
 with st.sidebar:
     if st.button("Refresh"):
-        pyautogui.hotkey("ctrl","F5")
+        pyautogui.hotkey("ctrl", "F5")
+
+st.write("--")
+
+## Cite the source
+st.write(" (1) Source: _Wikipedia_")
+
+
