@@ -5,7 +5,6 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 from statistics import mean
-from streamlit_autorefresh import st_autorefresh
 import json
 import pyautogui
 
@@ -80,14 +79,14 @@ blobs = list(bucket.list_blobs())
 most_recent_image_upload = max(blobs, key=lambda x: x.time_created)
 
 ## Create three columns
-col1, col2 = st.columns([4, 1])
+col1, col2 = st.columns([3, 1])
 
 ## VIRUS INFORMATION
 metadata = get_metadata(most_recent_image_upload)
 with col1:
     st.header("Microscope Feed")
     img = get_image(most_recent_image_upload)
-    st.image(img, width=500, output_format="PNG")
+    st.image(img, use_column_width=True, output_format="PNG")
 
 
 with col2:
@@ -100,15 +99,6 @@ with col2:
 
 st.header("Virus information")
 st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
-
-
-## DASHBOARD STATS
-st.header("Tendencies of the day")
-chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
-
-st.bar_chart(chart_data)
-st.write(f"**Average Probability**: {mean([0.90, 0.95])}")
-st.write(f'**Most detected virus**: {max(set(["Ebola", "Ebola", "CCHP"]))}')
 
 
 ## Refresh the page every 5 seconds
