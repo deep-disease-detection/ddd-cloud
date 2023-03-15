@@ -70,7 +70,7 @@ for key, page in pages.items():
 st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
 # Logo pour faire styler
-logo = Image.open("../dashboard/logo.png")
+logo = Image.open("logo.png")
 with st.sidebar:
     # st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
     # st.write("**About Us** [👉](https://github.com/deep-disease-detection)")

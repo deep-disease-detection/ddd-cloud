@@ -11,9 +11,10 @@ RUN pip install -r requirements.txt
 COPY Home.py Home.py
 COPY pages pages
 COPY logo.png logo.png
+COPY description.json description.json
 
 # Expose the port
 EXPOSE 8501
 
 # Run the app
-CMD ["streamlit", "run", "app.py", "--server.port", "8501"]
+CMD ["streamlit", "run", "Home.py", "--server.port", "8501"]
