@@ -30,7 +30,7 @@ def get_image_inference_from_model(image):
 if uploaded_file:
     virus, count = get_image_inference_from_model(uploaded_file)
     st.write(
-        f"CONGRATS ! The picture is a {virus} with {count} particle{'s' if (count>1 or count ==0) else ''}"
+        f"It is a picture of a {virus} with {count} particle{'s' if (count>1 or count ==0) else ''}"
     )
     st.image(uploaded_file)
 
