@@ -7,35 +7,32 @@ st.header(" Use our model to find the type of 🦠🦠🦠🦠")
 
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+
+
 def get_image_inference_from_model(image):
-    url = "https://ddd-model-unyu5blyja-ew.a.run.app/predict/"
+    url = "https://ddd-object-detection-unyu5blyja-ew.a.run.app/predict/"
     bytes_data = image.getvalue()
     image_encoded = base64.b64encode(bytes_data).decode("utf-8")
     message_dict = {"image": image_encoded}
 
     # Convert the dictionary to a JSON string
     response = requests.post(url, json=message_dict)
-    result_dict = {}
+
     # json to dict
-    result_dict = response.json()
-    print(result_dict)
-    virus = result_dict["Virus"]
-    proba = result_dict["Proba"]
+    result = response.json()
+    print(result)
+    virus = result["virus"]
+    count = result["virus_count"]
 
-    return virus, proba
+    return virus, count
 
-if uploaded_file :
-    virus, proba = get_image_inference_from_model(uploaded_file)
-    st.write(f"CONGRATS ! Your virus is {virus} with a probability of {proba}")
+
+if uploaded_file:
+    virus, count = get_image_inference_from_model(uploaded_file)
+    st.write(
+        f"CONGRATS ! The picture is a {virus} with {count} particle{'s' if (count>1 or count ==0) else ''}"
+    )
     st.image(uploaded_file)
-
-
-
-
-
-
-
-
 
 
 # # Define a function to make a prediction with the machine learning model
