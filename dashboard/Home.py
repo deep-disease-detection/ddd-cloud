@@ -7,7 +7,7 @@ import pandas as pd
 from statistics import mean
 from streamlit_autorefresh import st_autorefresh
 import json
-import pyautogui
+#import pyautogui
 
 # Set up GCP storage client
 client = storage.Client()
@@ -47,7 +47,7 @@ with open("description.json") as json_file:
 ### CUSTOM CSS
 CSS = """
   .stApp {
-    background-color: #111119;
+    background-color: #999999;
   }
   h1, h2 {
     color: springgreen;
@@ -118,11 +118,9 @@ st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 ## Reset button
 with st.sidebar:
     if st.button("Refresh"):
-        pyautogui.hotkey("ctrl", "F5")
-
+        #pyautogui.hotkey("ctrl", "F5")
+        st.experimental_rerun()
 st.write("--")
 
 ## Cite the source
 st.write(" (1) Source: _Wikipedia_")
-
-
