@@ -3,7 +3,9 @@ import pandas as pd
 import psycopg2
 from datetime import datetime
 import psycopg2
+import os
 
+PASSWORD = os.environ['PASSWORD']
 
 conn = psycopg2.connect(
     host="34.89.42.213",

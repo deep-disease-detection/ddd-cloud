@@ -2,10 +2,6 @@ import streamlit as st
 from google.cloud import storage
 import datetime
 from PIL import Image
-import numpy as np
-import pandas as pd
-from statistics import mean
-from streamlit_autorefresh import st_autorefresh
 import json
 import pyautogui
 
@@ -19,7 +15,6 @@ def get_metadata(blob):
     metadata = {}
     metadata["name"] = blob.name
     metadata["metadata"] = blob.metadata
-
     time_image_epoch = metadata["metadata"]["time"]
     date_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime(
         "%Y-%m-%d"
@@ -29,6 +24,7 @@ def get_metadata(blob):
     )
 
     return {
+        "proba" : metadata['metadata']['proba'],
         "class": metadata["metadata"]["class"],
         "date": date_image,
         "time": time_image,
@@ -54,8 +50,6 @@ new_page_names = {
 for key, page in pages.items():
   if page['page_name'] in new_page_names:
     page['page_name'] = new_page_names[page['page_name']]
-
-
 
 
 # Logo pour faire styler
@@ -91,6 +85,7 @@ with col1:
 with col2:
     st.header("Classification")
     st.metric("Virus type", metadata["class"])
+    st.metric("Proability", metadata['proba'] )
     st.metric("Date", metadata["date"])
     st.metric("Time", metadata["time"])
 
@@ -113,5 +108,3 @@ st.write("--")
 
 ## Cite the source
 st.write(" (1) Source: _Wikipedia_")
-
-
