@@ -3,7 +3,7 @@ import base64
 import requests
 
 
-st.header(" Use our model to find the type of 🦠🦠🦠🦠")
+st.header("🦠 Use our model to find the type of Virus 🦠")
 
 # User uploads image
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png", "tif","tiff"])
@@ -35,5 +35,5 @@ def get_image_inference_from_model(image):
 
 if uploaded_file:
     virus, proba = get_image_inference_from_model(uploaded_file)
-    st.write(f"CONGRATS ! Your virus is {virus} with a probability of {proba}")
+    st.write(f"🦠 Your virus is {virus} with a probability of {proba}")
     st.image(uploaded_file)

@@ -2,12 +2,8 @@ import streamlit as st
 from google.cloud import storage
 import datetime
 from PIL import Image
-import numpy as np
-import pandas as pd
-from statistics import mean
-from streamlit_autorefresh import st_autorefresh
 import json
-#import pyautogui
+import pyautogui
 
 # Set up GCP storage client
 client = storage.Client()
@@ -19,7 +15,6 @@ def get_metadata(blob):
     metadata = {}
     metadata["name"] = blob.name
     metadata["metadata"] = blob.metadata
-
     time_image_epoch = metadata["metadata"]["time"]
     date_image = datetime.datetime.fromtimestamp(float(time_image_epoch)).strftime(
         "%Y-%m-%d"
@@ -29,6 +24,7 @@ def get_metadata(blob):
     )
 
     return {
+        "proba" : metadata['metadata']['proba'],
         "class": metadata["metadata"]["class"],
         "date": date_image,
         "time": time_image,
@@ -44,22 +40,11 @@ def get_image(blob):
 with open("description.json") as json_file:
     wikipedia_data = json.load(json_file)
 
-### CUSTOM CSS
-CSS = """
-  .stApp {
-    background-color: #999999;
-  }
-  h1, h2 {
-    color: springgreen;
-  }
-  [data-testid="stMetricValue"] {
-    font-size: 1.75rem;
-  }
-"""
+
 # Set pages' names
 pages = st.source_util.get_pages('Home.py')
 new_page_names = {
-  'page_2': '🦠 Demo',
+  'page_2': '🦠 Upload your Virus',
   'page_3': '📈 Analytics',
 }
 for key, page in pages.items():
@@ -67,10 +52,8 @@ for key, page in pages.items():
     page['page_name'] = new_page_names[page['page_name']]
 
 
-st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
-
 # Logo pour faire styler
-logo = Image.open("logo.png")
+logo = Image.open("../dashboard/logo.png")
 with st.sidebar:
     # st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
     # st.write("**About Us** [👉](https://github.com/deep-disease-detection)")
@@ -102,6 +85,7 @@ with col1:
 with col2:
     st.header("Classification")
     st.metric("Virus type", metadata["class"])
+    st.metric("Proability", metadata['proba'] )
     st.metric("Date", metadata["date"])
     st.metric("Time", metadata["time"])
 
@@ -118,8 +102,8 @@ st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 ## Reset button
 with st.sidebar:
     if st.button("Refresh"):
-        #pyautogui.hotkey("ctrl", "F5")
-        st.experimental_rerun()
+        pyautogui.hotkey("ctrl", "F5")
+
 st.write("--")
 
 ## Cite the source
