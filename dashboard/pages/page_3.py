@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import psycopg2
 from datetime import datetime
-import psycopg2
+
 import os
 
-PASSWORD = os.environ['PASSWORD']
+PASSWORD = os.environ.get("PASSWORD")
 
 conn = psycopg2.connect(
     host="34.89.42.213",
