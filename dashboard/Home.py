@@ -108,3 +108,6 @@ st.write("--")
 
 ## Cite the source
 st.write(" (1) Source: _Wikipedia_")
+
+with st.sidebar:
+    st.image("QRcode.png")
