@@ -44,12 +44,6 @@ with open("description.json") as json_file:
 
 ### CUSTOM CSS
 CSS = """
-  .stApp {
-    background-color: #111119;
-  }
-  h1, h2 {
-    color: springgreen;
-  }
   [data-testid="stMetricValue"] {
     font-size: 1.75rem;
   }
@@ -96,7 +90,10 @@ with col2:
 
 
 st.header("Virus information")
-st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
+if wikipedia_data.get(metadata['class']):
+    st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
+else:
+    st.write('No virus was found in your picture')
 
 
 ## Refresh the page every 5 seconds
