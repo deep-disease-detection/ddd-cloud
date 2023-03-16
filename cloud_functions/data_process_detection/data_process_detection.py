@@ -24,8 +24,8 @@ def get_image_inference_from_model(image_encoded):
     result_dict = response.json()
     print(result_dict)
     virus = result_dict["virus"]
-    proba = result_dict["virus_count"]
-    return virus, proba
+    count = result_dict["virus_count"]
+    return virus, count
 
 
 def write_data(virus, virus_count):

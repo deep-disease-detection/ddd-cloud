@@ -4,9 +4,7 @@ import datetime
 from PIL import Image
 import numpy as np
 import pandas as pd
-from statistics import mean
 import json
-import pyautogui
 
 # Set up GCP storage client
 client = storage.Client()
@@ -60,7 +58,7 @@ CSS = """
 st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
 # Logo pour faire styler
-logo = Image.open("../dashboard/logo.png")
+# logo = Image.open("logo.png")
 with st.sidebar:
     # st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
     # st.write("**About Us** [👉](https://github.com/deep-disease-detection)")
@@ -94,7 +92,7 @@ with col2:
     st.metric("Virus type", metadata["class"])
     st.metric("Virus count", metadata["count"])
     st.metric("Date", metadata["date"])
-    st.metric("Date", metadata["time"])
+    st.metric("Time", metadata["time"])
 
 
 st.header("Virus information")
@@ -107,6 +105,6 @@ st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 
 
 # ### Reset button
-with st.sidebar:
-    if st.button("Refresh"):
-        pyautogui.hotkey("ctrl", "F5")
+# with st.sidebar:
+#     if st.button("Refresh"):
+#         pyautogui.hotkey("ctrl", "F5")
