@@ -13,3 +13,4 @@ matplotlib
 pandas
 base64
 requests
+psycopg2-binary

@@ -44,22 +44,11 @@ def get_image(blob):
 with open("description.json") as json_file:
     wikipedia_data = json.load(json_file)
 
-### CUSTOM CSS
-CSS = """
-  .stApp {
-    background-color: #111119;
-  }
-  h1, h2 {
-    color: springgreen;
-  }
-  [data-testid="stMetricValue"] {
-    font-size: 1.75rem;
-  }
-"""
+
 # Set pages' names
 pages = st.source_util.get_pages('Home.py')
 new_page_names = {
-  'page_2': '🦠 Demo',
+  'page_2': '🦠 Upload your Virus',
   'page_3': '📈 Analytics',
 }
 for key, page in pages.items():
@@ -67,7 +56,7 @@ for key, page in pages.items():
     page['page_name'] = new_page_names[page['page_name']]
 
 
-st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
+
 
 # Logo pour faire styler
 logo = Image.open("../dashboard/logo.png")
