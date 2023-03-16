@@ -6,6 +6,3 @@ streamlit-autorefresh
 numpy
 matplotlib
 pandas
-base64
-requests
-psycopg2-binary

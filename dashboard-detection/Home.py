@@ -5,13 +5,12 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 from statistics import mean
-from streamlit_autorefresh import st_autorefresh
 import json
 import pyautogui
 
 # Set up GCP storage client
 client = storage.Client()
-bucket_name = "images_classification_virus"
+bucket_name = "images_detection_virus"
 bucket = client.get_bucket(bucket_name)
 
 
@@ -30,6 +29,7 @@ def get_metadata(blob):
 
     return {
         "class": metadata["metadata"]["class"],
+        "count": metadata["metadata"]["virus_count"],
         "date": date_image,
         "time": time_image,
     }
@@ -44,19 +44,20 @@ def get_image(blob):
 with open("description.json") as json_file:
     wikipedia_data = json.load(json_file)
 
+### CUSTOM CSS
+CSS = """
+  .stApp {
+    background-color: #111119;
+  }
+  h1, h2 {
+    color: springgreen;
+  }
+  [data-testid="stMetricValue"] {
+    font-size: 1.75rem;
+  }
+"""
 
-# Set pages' names
-pages = st.source_util.get_pages('Home.py')
-new_page_names = {
-  'page_2': '🦠 Upload your Virus',
-  'page_3': '📈 Analytics',
-}
-for key, page in pages.items():
-  if page['page_name'] in new_page_names:
-    page['page_name'] = new_page_names[page['page_name']]
-
-
-
+st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
 # Logo pour faire styler
 logo = Image.open("../dashboard/logo.png")
@@ -77,22 +78,23 @@ blobs = list(bucket.list_blobs())
 # get the most recent image uploaded by date and time
 most_recent_image_upload = max(blobs, key=lambda x: x.time_created)
 
-## Create two columns
-col1, col2 = st.columns([4, 1])
+## Create three columns
+col1, col2 = st.columns([3, 1])
 
 ## VIRUS INFORMATION
 metadata = get_metadata(most_recent_image_upload)
 with col1:
     st.header("Microscope Feed")
     img = get_image(most_recent_image_upload)
-    st.image(img, width=300, output_format="PNG")
+    st.image(img, use_column_width=True, output_format="PNG")
 
 
 with col2:
     st.header("Classification")
     st.metric("Virus type", metadata["class"])
+    st.metric("Virus count", metadata["count"])
     st.metric("Date", metadata["date"])
-    st.metric("Time", metadata["time"])
+    st.metric("Date", metadata["time"])
 
 
 st.header("Virus information")
@@ -104,14 +106,7 @@ st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 # count = st_autorefresh(interval=50000, limit=100, key="ddd")
 
 
-## Reset button
+# ### Reset button
 with st.sidebar:
     if st.button("Refresh"):
         pyautogui.hotkey("ctrl", "F5")
-
-st.write("--")
-
-## Cite the source
-st.write(" (1) Source: _Wikipedia_")
-
-
