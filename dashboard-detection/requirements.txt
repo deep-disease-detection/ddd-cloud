@@ -5,3 +5,4 @@ streamlit-autorefresh
 numpy
 matplotlib
 pandas
+psycopg2-binary
