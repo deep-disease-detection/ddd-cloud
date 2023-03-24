@@ -11,6 +11,7 @@ RUN pip install -r requirements.txt
 COPY Home.py Home.py
 COPY pages pages
 COPY logo.png logo.png
+COPY QRcode.png QRcode.png
 COPY description.json description.json
 
 # Expose the port

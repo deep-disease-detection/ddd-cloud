@@ -1,14 +1,22 @@
 import streamlit as st
 from google.cloud import storage
 import datetime
-from PIL import Image
 import json
-import pyautogui
 
 # Set up GCP storage client
 client = storage.Client()
 bucket_name = "images_classification_virus"
 bucket = client.get_bucket(bucket_name)
+
+# Set pages' names
+pages = st.source_util.get_pages('Home.py')
+new_page_names = {
+  'Page_2': '🦠 Upload your Virus',
+  'page_3': '📈 Analytics',
+}
+for key, page in pages.items():
+  if page['page_name'] in new_page_names:
+    page['page_name'] = new_page_names[page['page_name']]
 
 
 def get_metadata(blob):
@@ -40,20 +48,15 @@ def get_image(blob):
 with open("description.json") as json_file:
     wikipedia_data = json.load(json_file)
 
+### CUSTOM CSS
+CSS = """
+  [data-testid="stMetricValue"] {
+    font-size: 1.75rem;
+  }
+"""
 
-# Set pages' names
-pages = st.source_util.get_pages('Home.py')
-new_page_names = {
-  'page_2': '🦠 Upload your Virus',
-  'page_3': '📈 Analytics',
-}
-for key, page in pages.items():
-  if page['page_name'] in new_page_names:
-    page['page_name'] = new_page_names[page['page_name']]
+st.write(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
-
-# Logo pour faire styler
-logo = Image.open("../dashboard/logo.png")
 with st.sidebar:
     # st.markdown("![Github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)(https://github.com/deep-disease-detection)")
     # st.write("**About Us** [👉](https://github.com/deep-disease-detection)")
@@ -99,10 +102,9 @@ st.write(f"**{metadata['class']}** {wikipedia_data[metadata['class']]}")
 # count = st_autorefresh(interval=50000, limit=100, key="ddd")
 
 
-## Reset button
 with st.sidebar:
     if st.button("Refresh"):
-        pyautogui.hotkey("ctrl", "F5")
+        st.experimental_rerun()
 
 st.write("--")
 
