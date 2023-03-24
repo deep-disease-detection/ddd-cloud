@@ -1,11 +1,6 @@
 streamlit
 google-cloud-storage
-pyautogui
-Pillow
-streamlit-autorefresh
 numpy
 matplotlib
 pandas
-base64
-requests
 psycopg2-binary

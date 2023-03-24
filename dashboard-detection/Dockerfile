@@ -11,7 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY Home.py .
 COPY pages pages
 COPY description.json description.json
-COPY logo.png logo.png
 
 # Expose the port
 EXPOSE 8501

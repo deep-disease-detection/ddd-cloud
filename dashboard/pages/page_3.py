@@ -5,7 +5,7 @@ from datetime import datetime
 
 import os
 
-PASSWORD = os.environ.get("PASSWORD")
+PASSWORD = os.environ.get("DB_PASSWORD")
 
 conn = psycopg2.connect(
     host="34.89.42.213",
